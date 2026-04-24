@@ -39,4 +39,39 @@ module.exports = {
       res.status(500).json({ error: "Erro ao buscar usuário por ID" });
     }
   },
+
+  // Atualizar (PUT)
+  async atualizarUsuario(req, res) {
+    try {
+      const { id } = req.params;
+      const { nome, email, senha } = req.body;
+      const usuario = await Usuario.findByPk(id);
+      if (!usuario) {
+        res.status(404).json({ error: "Usuário não encontrado" });
+      } else {
+        await usuario.update({ nome, email, senha });
+        res.status(200).json(usuario);
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar usuário:", error);
+      res.status(500).json({ error: "Erro ao atualizar usuário" });
+    }
+  },
+
+  // Deletar (DELETE)
+  async deletarUsuario(req, res) {
+    try {
+      const { id } = req.params;
+      const usuario = await Usuario.findByPk(id);
+      if (!usuario) {
+        res.status(404).json({ error: "Usuário não encontrado" });
+      } else {
+        await usuario.destroy();
+        res.status(204).send();
+      }
+    } catch (error) {
+      console.error("Erro ao deletar usuário:", error);
+      res.status(500).json({ error: "Erro ao deletar usuário" });
+    }
+  },
 };
